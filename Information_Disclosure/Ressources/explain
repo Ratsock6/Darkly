@@ -1,0 +1,12 @@
+Résumé de la faille
+
+Sur le site, certaines informations sensibles (ici l’adresse e-mail) ne sont pas affichées directement à l’écran,
+mais elles sont tout de même présentes en clair dans le code source HTML de la page, simplement masquées avec l’attribut hidden.
+
+Cela constitue une faille de type Information Disclosure / Sensitive Data Exposure, car :
+
+- La donnée est transmise côté client alors qu’elle ne devrait pas l’être.
+- Toute personne peut la récupérer facilement via un clic droit → Inspecter le code source.
+- La donnée sensible est donc exposée, même si elle n’apparaît pas dans l’interface du site.
+
+L'adresse est d'ailleurs changeable. Donc nous pouvons imaginer un changement de celui-ci pour que cela renvoie le mail de renvoie de mot de passe a nous.
