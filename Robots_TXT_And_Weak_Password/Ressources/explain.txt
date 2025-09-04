@@ -1,0 +1,31 @@
+Le fichier robots.txt sert à donner des informations aux robots d’indexation des moteurs de recherche.
+Il indique notamment quelles pages ne doivent pas être indexées.
+Cependant, ce fichier est uniquement informatif : il ne bloque pas réellement l’accès aux pages.
+
+Or, sur le site BornToSec, le fichier robots.txt contient une directive Disallow vers la page /whatever.
+Comme cette directive ne bloque pas la page et que nous ne sommes pas des robots,
+nous sommes allés sur cette page et nous y avons trouvé un fichier .htpasswd (qui n’a rien à faire là).
+Ce fichier sert à la configuration Apache pour stocker des noms d’utilisateur et des mots de passe afin d’ajouter une authentification à certaines pages.
+Ce fichier contient :
+
+root:437394baff5aa33daa618be47b75cb49
+
+Le mot de passe est hashé avec MD5. Cet algorithme de hachage ne comporte pas de sel (un nombre combiné au texte pour obtenir un hash différent même si l’on hache le même texte).
+Il est donc vulnérable aux rainbow tables (grandes bases de données contenant des textes et leur hash associé).
+Nous nous rendons donc sur le site crackstation.net qui contient une grande rainbow table avec les mots de passe les plus utilisés.
+Nous y recherchons notre hash et bingo, le site trouve que ce hash correspond au mot de passe :
+
+qwerty123@
+
+Un mot de passe très commun et donc très peu sécurisé.
+Nous avons donc un nom d’utilisateur et un mot de passe. Il ne reste plus qu’à trouver sur quelle page les utiliser.
+Par intuition, nous trouvons cette page :
+
+http://10.12.200.139/admin/
+
+Et en inscrivant root comme nom d’utilisateur et qwerty123@ comme mot de passe,
+nous finissons par trouver le flag.
+
+Pour régler cette faille, nous proposons deux solutions :
+	- Bloquer la page /whatever dans la configuration du serveur web.
+	- Utiliser des mots de passe plus sécurisés.

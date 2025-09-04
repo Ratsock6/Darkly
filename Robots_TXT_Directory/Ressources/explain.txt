@@ -1,0 +1,16 @@
+Le fichier robots.txt sert à donner des informations aux robots d’indexation des moteurs de recherche.
+Il indique notamment quelles pages ne doivent pas être indexées.
+Cependant, ce fichier est uniquement informatif : il ne bloque pas réellement l’accès aux pages.
+
+Or, sur le site BornToSec, le fichier robots.txt contient une directive Disallow vers la page /.hidden.
+Comme cette directive ne bloque la page et que nous ne sommes pas des robots,
+nous sommes allés sur cette page et nous y avons trouvé beaucoup de dossiers, contenant d’autres dossiers, et encore des dossers et devines quoi ? encore des Dos...
+Des README. 18 279 README ...
+
+Après en avoir ouvert quelques-uns et n’y avoir trouvé que de petites blagues, nous avons vite compris qu’il serait impossible de trouver le flag à la main.
+Nous avons donc créé le script list_dir.sh, qui nous a permis de parcourir tous les dossiers et de lire tous les README.
+Finalement, grâce à un petit grep 'flag', nous avons trouvé l’aiguille dans la botte de foin.
+
+pour regler cette faille nous proposons il y a 2 solution
+	- bloquer la page /.hidden dans la config du serveur web
+	- ajouter un mot de passe pour acceder a la page
