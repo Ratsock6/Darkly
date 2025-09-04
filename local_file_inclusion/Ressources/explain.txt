@@ -1,0 +1,26 @@
+Faille identifiée : Local File Inclusion
+🔎 Description
+
+La faille d’inclusion de fichier local (Local File Inclusion – LFI) se produit lorsqu’une application web inclut un fichier dont le chemin est fourni directement par l’utilisateur,
+sans validation ou filtrage suffisant.
+En manipulant ce paramètre, un attaquant peut accéder à des fichiers sensibles présents sur le serveur.
+
+⚡ Exemple observé
+
+URL normale :
+
+http://10.12.200.9/?page=b7e44c7a40c5f80139f0a50f3650fb2bd8d00b0d24667c4c2ca32c88e13b758f
+
+
+Après modification :
+
+http://10.12.200.9/index.php?page=../../../../../../../../etc/passwd
+
+
+Cela permet de lire le contenu du fichier système /etc/passwd, qui contient la liste des utilisateurs du serveur.
+
+Risques
+
+Exfiltration de données sensibles (comptes utilisateurs, clés API, fichiers de configuration, logs…).
+Récupération d’informations pouvant mener à une compromission totale du serveur (ex : inclusion de fichiers PHP contenant des identifiants).
+Dans certains cas, la faille peut être combinée avec l’upload de fichiers malveillants pour obtenir une exécution de code à distance (RCE).
