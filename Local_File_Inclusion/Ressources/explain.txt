@@ -1,11 +1,11 @@
 Faille identifiée : Local File Inclusion
-🔎 Description
+Description
 
 La faille d’inclusion de fichier local (Local File Inclusion – LFI) se produit lorsqu’une application web inclut un fichier dont le chemin est fourni directement par l’utilisateur,
 sans validation ou filtrage suffisant.
 En manipulant ce paramètre, un attaquant peut accéder à des fichiers sensibles présents sur le serveur.
 
-⚡ Exemple observé
+Exemple observé
 
 URL normale :
 
