@@ -1,13 +1,18 @@
-Page vulnérable : Le footer du site
+Page vulnérable : Footer du site — http://10.11.200.236/index.php?page=redirect&site=twitter
 
-Dans le footer du site. Il y a des redirections vers le X (Twitter), Facebook et Instagram du site.
-Cependant les redirections marche en passant par l'URL suivant : 
+En cliquant sur les icônes du footer (Twitter, Facebook, Instagram), le site redirige via une URL dynamique du type :
 
 http://10.11.200.236/index.php?page=redirect&site=twitter
 
-Nous pouvons juste donc changer la variable "twitter" par "youtube" et envoyer ce lien a une victime.
-Celle-ci pensera bel et bien tomber sur un site de confiance etant donnée que le nom de domaine sera quelque chose de credible.
-Mais va finalement etre rediger sur un site malveillant.
 
-Solution :
- - Faire en sorte que la rediction affiche d'abord sur quel site va l'utilisateur.
+La vulnérabilité vient du fait que le paramètre site est contrôlable côté client : on peut remplacer twitter par youtube (ou n’importe quel autre nom) et envoyer ce lien à une victime. L’URL affiche le domaine légitime, la victime a donc confiance, mais elle est finalement redirigée vers un site malveillant — social engineering et phishing facilités.
+
+Risques :
+ - Attaque de phishing (utilisateurs convaincus d’ouvrir un lien sûr).
+ - Perte de confiance et brand abuse (détournement d’icônes officielles).
+ - Potentiel de vol d’identifiants ou d’exécution de contenus malicieux sur des sites externes.
+
+Solutions proposées (à appliquer immédiatement) :
+ - Liens en dur : remplacer les redirections dynamiques par des URLs fixes pointant directement vers les comptes officiels.
+ - Whitelist & validation serveur : si une redirection dynamique est vraiment nécessaire, n’autoriser que une liste fermée de valeurs (twitter, facebook, instagram) et valider côté serveur avant redirection.
+ - Interstitial / confirmation : afficher une page d’avertissement qui montre clairement la destination finale avant d’effectuer la redirection (ex. « Vous allez quitter example.com vers : https://twitter.com/example — Continuer ? »).
