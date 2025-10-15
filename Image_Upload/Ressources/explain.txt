@@ -1,3 +1,4 @@
+Faille identifiée : Secure upload on server
 Page: /?page=upload
 
 La page d'upload sert à uploader des images sur le site.

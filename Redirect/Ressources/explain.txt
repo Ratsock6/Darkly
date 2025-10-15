@@ -1,4 +1,5 @@
-Page vulnérable : Footer du site — http://10.11.200.236/index.php?page=redirect&site=twitter
+Faille identifiée : Rediction non secure
+Page: /index.php?page=redirect&site=twitter
 
 En cliquant sur les icônes du footer (Twitter, Facebook, Instagram), le site redirige via une URL dynamique du type :
 

@@ -1,4 +1,5 @@
-Page vulnérable : http://10.11.200.236/?page=survey#
+Faille identifiée : parameter tampering
+Page: /?page=survey#
 
 En arrivant sur la page, un tableau affiche des sondages où l’on peut voter une valeur supposée être comprise entre 1 et 10 pour chaque sujet.
 La vulnérabilité provient du fait que la valeur du vote est lue directement depuis le HTML / la requête côté client :

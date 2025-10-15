@@ -1,6 +1,7 @@
-Résumé de la faille
+Faille identifiée : Information Disclosure
+Page : http://10.11.200.236/?page=recover
 
-Lien : http://10.11.200.236/?page=recover
+Description:
 
 Sur le site, certaines informations sensibles (ici l’adresse e-mail) ne sont pas affichées directement à l’écran,
 mais elles sont tout de même présentes en clair dans le code source HTML de la page, simplement masquées avec l’attribut hidden.

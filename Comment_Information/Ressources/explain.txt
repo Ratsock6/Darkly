@@ -1,5 +1,5 @@
-Sur la page BornToSec :
-http://10.11.200.236/?page=b7e44c7a40c5f80139f0a50f3650fb2bd8d00b0d24667c4c2ca32c88e13b758f
+Faille identifiée : Information en commentaire
+Page : /?page=b7e44c7a40c5f80139f0a50f3650fb2bd8d00b0d24667c4c2ca32c88e13b758f
 
 Il y a des informations qui sont mis en commentaire. Les informations qui sont mis en commentaire ne sont pas caché pour les utilisateurs.
 C'est pourquoi, il ne faut pas donner d'informations sensible a l'entré. Nous sommes, donc tombé sur (voir first_comment.png) ainsi que (second_comment.png).

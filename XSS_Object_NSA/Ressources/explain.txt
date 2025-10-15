@@ -1,5 +1,7 @@
 Faille identifiée : Cross-Site Scripting (XSS)
-Description
+Page: /?page=media&src=nsa
+
+Description:
 
 Le site vulnérable réinjecte directement le paramètre src de l’URL dans l’attribut data d’une balise HTML <object>.
 Exemple :

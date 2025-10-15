@@ -1,3 +1,6 @@
+Faille identifiée : Robots TXT informations
+Page: /robots.txt
+
 Le fichier robots.txt sert à donner des informations aux robots d’indexation des moteurs de recherche.
 Il indique notamment quelles pages ne doivent pas être indexées.
 Cependant, ce fichier est uniquement informatif : il ne bloque pas réellement l’accès aux pages.

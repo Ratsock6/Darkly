@@ -1,3 +1,6 @@
+Faille identifiée : SQL Injection
+Page: /?page=searchimg
+
 Définition :
 L’injection SQL est une vulnérabilité qui se produit lorsqu’une application insère directement des données provenant de l’utilisateur
 dans une requête SQL sans les filtrer ou les préparer correctement.

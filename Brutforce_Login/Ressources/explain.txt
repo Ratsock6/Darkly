@@ -1,4 +1,6 @@
 Faille identifiée : Brute Force
+Page : /?page=signin
+
 Description
 
 Le brute force est une technique d’attaque consistant à tester systématiquement toutes les combinaisons possibles pour deviner un mot de passe ou un identifiant.

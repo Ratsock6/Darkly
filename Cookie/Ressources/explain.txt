@@ -1,3 +1,6 @@
+Faille identifiée : Bad cookie secure
+Page: Partout
+
 Lors ce qu'on arrive sur le site nous donne un cookie qui s'appel "I_am_admin" qui est égal a "68934a3e9455fa72420237eb05902327"
 La valeur du cookie veut dire "false" si on le décrypte du format d'encryption md5. Nous pouvons utiliser le site : https://md5decrypt.net/
 Si nous remplaçons cette valeur par "true" en encryption md5 ce qui donne : b326b5062b2f0e69046810717534cb09
