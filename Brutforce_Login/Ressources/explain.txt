@@ -1,30 +1,26 @@
 Faille identifiée : Brute Force
 Page : /?page=signin
 
-Description
+Description:
+	Le brute force est une technique d’attaque consistant à tester systématiquement toutes les combinaisons possibles pour deviner un mot de passe ou un identifiant.
+	Dans le contexte web, cela se traduit par l’envoi automatique de multiples tentatives de connexion sur un formulaire d’authentification jusqu’à trouver la combinaison correcte.
+	Cette faille exploite le fait que le serveur ne limite pas le nombre de tentatives ou ne met pas en place de mécanismes de protection contre les connexions répétées.
 
-Le brute force est une technique d’attaque consistant à tester systématiquement toutes les combinaisons possibles pour deviner un mot de passe ou un identifiant.
-Dans le contexte web, cela se traduit par l’envoi automatique de multiples tentatives de connexion sur un formulaire d’authentification jusqu’à trouver la combinaison correcte.
-Cette faille exploite le fait que le serveur ne limite pas le nombre de tentatives ou ne met pas en place de mécanismes de protection contre les connexions répétées.
+Exploitation :
+	Formulaire de connexion normal :
+	http://10.12.200.9/index.php?page=signin
 
-Exemple observé
+	Hydra a été utilisé pour tester automatiquement une liste de mots de passe pour l’utilisateur admin :
+	hydra -l admin -P wordlist.txt 10.12.200.9 http-post-form "/index.php?page=signin:username=^USER^&password=^PASS^:images/WrongAnswer.gif"
 
-Formulaire de connexion normal :
+	Cette commande envoie chaque mot de passe de la liste à l’utilisateur admin et détecte les échecs via l’image WrongAnswer.gif. Quand le mot de passe correct est trouvé, Hydra le signale.
+	En exécutant cette commande, nous avons découvert que le mot de passe de l’utilisateur admin est "shadow".
 
-http://10.12.200.9/index.php?page=signin
-
-Hydra a été utilisé pour tester automatiquement une liste de mots de passe pour l’utilisateur admin :
-hydra -l admin -P wordlist.txt 10.12.200.9 http-post-form "/index.php?page=signin:username=^USER^&password=^PASS^:images/WrongAnswer.gif"
-
-Cette commande envoie chaque mot de passe de la liste à l’utilisateur admin et détecte les échecs via l’image WrongAnswer.gif. Quand le mot de passe correct est trouvé, Hydra le signale.
-
-Risques
-
-Compromission de comptes utilisateurs si un mot de passe faible est utilisé.
-Accès non autorisé à des informations sensibles du site.
-Possibilité de mouvements latéraux ou d’exploitation plus avancée si un compte administrateur est compromis.
+Risques:
+	Compromission de comptes utilisateurs si un mot de passe faible est utilisé.
+	Accès non autorisé à des informations sensibles du site.
 
 Correctifs :
-Limiter le nombre de tentatives de connexion consécutives (ex : verrouillage après 5 échecs).
-Ajouter un CAPTCHA ou un délai après plusieurs tentatives pour ralentir les attaques automatiques.
-Imposer des mots de passe complexes et uniques.
+	Limiter le nombre de tentatives de connexion consécutives (ex : verrouillage après 5 échecs).
+	Ajouter un CAPTCHA ou un délai après plusieurs tentatives pour ralentir les attaques automatiques.
+	Imposer des mots de passe complexes et uniques.

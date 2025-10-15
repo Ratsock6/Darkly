@@ -1,19 +1,24 @@
 Faille identifiée : Rediction non secure
 Page: /index.php?page=redirect&site=twitter
 
-En cliquant sur les icônes du footer (Twitter, Facebook, Instagram), le site redirige via une URL dynamique du type :
 
-http://10.11.200.236/index.php?page=redirect&site=twitter
+Description:
+	En cliquant sur les icônes du footer (Twitter, Facebook, Instagram), le site redirige via une URL dynamique du type :
+
+	http://xxx.xxx.xxx.xxx/index.php?page=redirect&site=twitter
 
 
-La vulnérabilité vient du fait que le paramètre site est contrôlable côté client : on peut remplacer twitter par youtube (ou n’importe quel autre nom) et envoyer ce lien à une victime. L’URL affiche le domaine légitime, la victime a donc confiance, mais elle est finalement redirigée vers un site malveillant — social engineering et phishing facilités.
+	La vulnérabilité vient du fait que le paramètre site est contrôlable côté client : on peut remplacer twitter par youtube (ou n’importe quel autre nom) et envoyer ce lien à une victime.
+	L’URL affiche le domaine légitime, la victime a donc confiance, mais elle est finalement redirigée vers un site malveillant — social engineering et phishing facilités.
 
-Risques :
- - Attaque de phishing (utilisateurs convaincus d’ouvrir un lien sûr).
- - Perte de confiance et brand abuse (détournement d’icônes officielles).
- - Potentiel de vol d’identifiants ou d’exécution de contenus malicieux sur des sites externes.
+Exploitation:
+	En modifiant le paramètre site, nous avons pu rediriger vers un site externe de notre choix.
 
-Solutions proposées (à appliquer immédiatement) :
- - Liens en dur : remplacer les redirections dynamiques par des URLs fixes pointant directement vers les comptes officiels.
- - Whitelist & validation serveur : si une redirection dynamique est vraiment nécessaire, n’autoriser que une liste fermée de valeurs (twitter, facebook, instagram) et valider côté serveur avant redirection.
- - Interstitial / confirmation : afficher une page d’avertissement qui montre clairement la destination finale avant d’effectuer la redirection (ex. « Vous allez quitter example.com vers : https://twitter.com/example — Continuer ? »).
+	http://xxx.xxx.xxx.xxx/index.php?page=redirect&site=youtube
+
+	ce qui affiche le flag.
+
+Correctifs:
+	- Liens en dur : remplacer les redirections dynamiques par des URLs fixes pointant directement vers les comptes officiels.
+	- Whitelist & validation serveur : si une redirection dynamique est vraiment nécessaire, n’autoriser que une liste fermée de valeurs (twitter, facebook, instagram) et valider côté serveur avant redirection.
+	- Afficher une page d’avertissement qui montre clairement la destination finale avant d’effectuer la redirection (ex. « Vous allez quitter example.com vers : https://twitter.com/example — Continuer ? »).

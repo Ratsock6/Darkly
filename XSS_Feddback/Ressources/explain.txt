@@ -1,7 +1,4 @@
-
 Faille identifiée : Cross-Site Scripting (XSS)
-
-
 Page : /?page=feedback
 
 

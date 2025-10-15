@@ -1,28 +1,27 @@
-Faille identifiée : Local File Inclusion
-Page : /?page=b7e44c7a40c5f80139f0a50f3650fb2bd8d00b0d24667c4c2ca32c88e13b758f
+Faille identifiée: Local File Inclusion
+Page: /?page=b7e44c7a40c5f80139f0a50f3650fb2bd8d00b0d24667c4c2ca32c88e13b758f
 
-Description
+Description:
+	La faille d’inclusion de fichier local (Local File Inclusion – LFI) se produit lorsqu’une application web inclut un fichier dont le chemin est fourni directement par l’utilisateur,
+	sans validation ou filtrage suffisant.
+	En manipulant ce paramètre, un attaquant peut accéder à des fichiers sensibles présents sur le serveur.
 
-La faille d’inclusion de fichier local (Local File Inclusion – LFI) se produit lorsqu’une application web inclut un fichier dont le chemin est fourni directement par l’utilisateur,
-sans validation ou filtrage suffisant.
-En manipulant ce paramètre, un attaquant peut accéder à des fichiers sensibles présents sur le serveur.
+Exploitation:
+	Le paramètre "page" dans l'URL permet d'inclure des fichiers.
+	En modifiant la valeur de ce paramètre, nous pouvons tenter d'inclure des fichiers système pour cela il faut repeter la sequence ../ pour remonter jusqu'a la racine du système de fichiers,
+	puis ajouter le chemin du fichier que nous voulons lire.
 
-Exemple observé
-
-URL normale :
-
-http://10.12.200.9/?page=b7e44c7a40c5f80139f0a50f3650fb2bd8d00b0d24667c4c2ca32c88e13b758f
-
-
-Après modification :
-
-http://10.12.200.9/index.php?page=../../../../../../../../etc/passwd
+	URL normale :
+	http://xxx.xxx.xxx.xxx/?page=survey
 
 
-Cela permet de lire le contenu du fichier système /etc/passwd, qui contient la liste des utilisateurs du serveur.
+	Après modification :
+	http://xxx.xxx.xxx.xxx/?page=../../../../../../../../etc/passwd
 
-Risques
 
-Exfiltration de données sensibles (comptes utilisateurs, clés API, fichiers de configuration, logs…).
-Récupération d’informations pouvant mener à une compromission totale du serveur (ex : inclusion de fichiers PHP contenant des identifiants).
-Dans certains cas, la faille peut être combinée avec l’upload de fichiers malveillants pour obtenir une exécution de code à distance (RCE).
+	Cela permet de lire le contenu du fichier système /etc/passwd, qui contient la liste des utilisateurs du serveur
+	et aussi de récupérer le flag.
+
+Correctifs :
+	Ne jamais inclure directement des fichiers basés sur des entrées utilisateur.
+	Valider et filtrer les entrées utilisateur pour s'assurer qu'elles ne contiennent pas de séquences de traversée de répertoires (../).

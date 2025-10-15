@@ -1,11 +1,14 @@
 Faille identifiée : parameter tampering
 Page: /?page=survey#
 
+#TODO
+
+Description et exploitation:
 En arrivant sur la page, un tableau affiche des sondages où l’on peut voter une valeur supposée être comprise entre 1 et 10 pour chaque sujet.
 La vulnérabilité provient du fait que la valeur du vote est lue directement depuis le HTML / la requête côté client :
  il est donc possible de la modifier (via l’inspecteur, un proxy ou curl) et d’envoyer des valeurs en dehors de la plage autorisée.
 En clair, on peut soumettre des votes supérieurs à 10 et fausser les résultats.
 
-Solutions proposées :
+Correctifs:
  - Valider et stocker les votes côté serveur (ne pas se fier uniquement aux données envoyées par le client).
  - Imposer une vérification stricte : n’accepter que des entiers dans la plage 1–10 (et rejeter toute requête hors-limite).
