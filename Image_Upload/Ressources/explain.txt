@@ -1,0 +1,17 @@
+Page: /?page=upload
+
+La page d'upload sert à uploader des images sur le site.
+Mais le back-end du site ne vérifie pas correctement si le fichier uploadé est bien une image.
+En effet, il vérifie uniquement que le header Content-Type (un header qui sert à informer le destinataire du type de contenu) est égal à image/jpeg.
+Or, il est possible de modifier ce header avec l'inspecteur de requêtes du navigateur et donc de uploader un fichier qui n'est pas une image.
+Ceci est une faille de sécurité car elle peut permettre à un attaquant de uploader un fichier exécutable (comme un script PHP) et potentiellement l'exécuter sur le serveur.
+
+Pour récupérer le flag, nous avons donc créé un fichier (hack.php).
+Nous l'avons ensuite uploadé une première fois avec l'interface du site,
+puis utilisé l'inspecteur de requêtes du navigateur pour renvoyer la même requête
+mais en modifiant le header Content-Type pour mettre image/jpeg à la place de text/php,
+ce qui a fait apparaître le flag.
+
+Pour corriger cette faille, nous proposons 2 solutions :
+	- Vérifier que le contenu du fichier uploadé correspond bien au format d'une image
+	- Changer l'extension des fichiers uploadés en .jpg (ou autre extension d'image)
