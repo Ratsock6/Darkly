@@ -1,0 +1,13 @@
+Page vulnérable : Le footer du site
+
+Dans le footer du site. Il y a des redirections vers le X (Twitter), Facebook et Instagram du site.
+Cependant les redirections marche en passant par l'URL suivant : 
+
+http://10.11.200.236/index.php?page=redirect&site=twitter
+
+Nous pouvons juste donc changer la variable "twitter" par "youtube" et envoyer ce lien a une victime.
+Celle-ci pensera bel et bien tomber sur un site de confiance etant donnée que le nom de domaine sera quelque chose de credible.
+Mais va finalement etre rediger sur un site malveillant.
+
+Solution :
+ - Faire en sorte que la rediction affiche d'abord sur quel site va l'utilisateur.
