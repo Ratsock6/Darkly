@@ -1,14 +1,14 @@
 Faille identifiée : Cross-Site Scripting (XSS)
 Page: /?page=media&src=nsa
 
-#TODO
-
 Description:
-    Le site vulnérable réinjecte directement le paramètre src de l’URL dans l’attribut data d’une balise HTML <object>.
+    Le site possède une page media qui affiche un objet HTML dont la source est définie par le paramètre src dans l’URL.
+    Cependant, ce paramètre n’est pas correctement filtré ou échappé.
+    En effet, il est directement inséré dans le code HTML sans validation ni nettoyage.
     Exemple :
-        http://192.168.0.136/?page=media&src=feur
+        http://xxx.xxx.xxx.xxx/?page=media&src=FEUR
     génère dans le html :
-        <object data="feur"></object>
+        <object data="FEUR"></object>
 
     Cette absence de filtrage permet d’injecter du code malveillant en utilisant le schéma data:.
     Ainsi, il est possible de forcer le navigateur à interpréter du HTML/JavaScript arbitraire, entraînant une exécution de script côté client (XSS).
@@ -18,24 +18,22 @@ Description:
 Exploitation:
     En injectant une URL de type data:text/html;base64,..., on peut afficher et exécuter du code JavaScript dans le navigateur de la victime.
 
-    Exemple avec un simple alert() :
-        http://192.168.0.136/?page=media&src=data:text/html;base64,PHNjcmlwdD5hbGVydCgiWFNTIik8L3NjcmlwdD4=
+    "data:" : indique que le contenu est inclus directement dans l'URL.
+    "text/html" : spécifie que le contenu est du HTML.
+    "base64," : indique que le contenu est encodé en base64 (pour éviter les problèmes d'encodage dans l'URL).
+    Le reste de l'URL est le code HTML/JavaScript encodé en base64.
 
-    Payload décodé :
+    On a donc crée l'URL suivante :
+        http://xxx.xxx.xxx.xxx/?page=media&src=data:text/html;base64,PHNjcmlwdD5hbGVydCgiWFNTIik8L3NjcmlwdD4=
+
+    Le code base64 "PHNjcmlwdD5hbGVydCgiWFNTIik8L3NjcmlwdD4=" ce décode en :
         <script>alert("XSS")</script>
-
-    Résultat : le navigateur exécute le script et la faille est confirmée.
-
-
-Impact:
-    Exécution arbitraire de JavaScript dans le navigateur des utilisateurs.
-    Vol de cookies de session (document.cookie).
-    Redirection vers des pages malveillantes.
-    Défiguration ou injection de contenu trompeur (phishing).
-    Dans un vrai contexte, compromet gravement la sécurité et la confidentialité des utilisateurs.
+    
+    Ce qui aurait affiché une alerte XSS dans le navigateur de la victime.
+    Mais sur le site BornToSec, cela permet d'afficher le flag.
 
 
-Correctif:
+Correctifs:
     Échapper/encoder correctement les entrées utilisateurs avant de les réinjecter dans du HTML:
         Whitelist / liste blanche : accepter seulement certaines valeurs connues.
         Exemple : si ton site ne doit afficher que nsa, media1, media2 :
@@ -48,4 +46,3 @@ Correctif:
 
     Restreindre le paramètre src uniquement aux ressources autorisées (ex. : liste blanche de fichiers/URLs).
     Mettre en place une Content Security Policy (CSP) pour limiter l’exécution de scripts inline.
-    Vérifier côté serveur et côté client que le paramètre src ne peut pas contenir de schéma dangereux (data:, javascript:, etc.).

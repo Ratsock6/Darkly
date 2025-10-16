@@ -3,12 +3,18 @@ Page: /?page=survey#
 
 #TODO
 
-Description et exploitation:
-En arrivant sur la page, un tableau affiche des sondages où l’on peut voter une valeur supposée être comprise entre 1 et 10 pour chaque sujet.
-La vulnérabilité provient du fait que la valeur du vote est lue directement depuis le HTML / la requête côté client :
- il est donc possible de la modifier (via l’inspecteur, un proxy ou curl) et d’envoyer des valeurs en dehors de la plage autorisée.
-En clair, on peut soumettre des votes supérieurs à 10 et fausser les résultats.
+Description:
+	En arrivant sur la page, un tableau affiche des sondages où l’on peut voter une valeur supposée être comprise entre 1 et 10 pour chaque sujet.
+	La vulnérabilité provient du fait que le seul code qui vérifie que la valeur est bien dans cette plage est du code côté client.
+	Un attaquant peut facilement envoyer une valeur en dehors de cette plage en modifiant la requête HTTP envoyée au serveur
+	ou juste en modifiant la balise <select> dans l’inspecteur HTML de son navigateur.
+	Cela peut permettre a un attaquant d’envoyer des valeurs inattendues au serveur et potentiellement de provoquer des comportements indésirables.
 
-Correctifs:
- - Valider et stocker les votes côté serveur (ne pas se fier uniquement aux données envoyées par le client).
- - Imposer une vérification stricte : n’accepter que des entiers dans la plage 1–10 (et rejeter toute requête hors-limite).
+Exploitation:
+	Nous sommes allés dans l'inspecteur HTML de notre navigateur pour modifier la balise <select> et ajouter des options avec des valeurs en dehors de la plage 1-10.
+	Par exemple, nous avons ajouté l'option <option value="42">42</option>.
+	Ensuite, nous avons sélectionné cette option et soumis le formulaire.
+	Ce qui a affiché le flag.
+
+Correctif:
+ - Valider la plage des votes côté serveur et renvoyer une erreur si la valeur est en dehors de la plage attendue.
